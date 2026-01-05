@@ -1,0 +1,22 @@
+name = "trmnl-yr-weather"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Cron trigger - runs every 15 minutes (adjust as needed, max 12/hour for free TRMNL)
+[triggers]
+crons = ["*/15 * * * *"]
+
+# Environment variables (set these using: wrangler secret put <NAME>)
+# Or configure them in the Cloudflare dashboard
+[vars]
+# TRMNL_WEBHOOK_URL = "your-webhook-url-here"
+# LOCATION_LAT = "59.9139"
+# LOCATION_LON = "10.7522"
+# LOCATION_NAME = "Oslo"
+# CONTACT_EMAIL = "your-email@example.com"
+
+# Example locations:
+# Oslo, Norway: 59.9139, 10.7522
+# Bergen, Norway: 60.3913, 5.3221
+# London, UK: 51.5074, -0.1278
+# New York, USA: 40.7128, -74.0060

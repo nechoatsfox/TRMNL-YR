@@ -1,0 +1,19 @@
+{
+  "name": "trmnl-yr-weather",
+  "version": "1.0.0",
+  "description": "TRMNL plugin for YR.no weather data",
+  "main": "worker.js",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "tail": "wrangler tail"
+  },
+  "keywords": [
+    "trmnl",
+    "weather",
+    "yr.no",
+    "cloudflare-workers"
+  ],
+  "author": "",
+  "license": "MIT"
+}

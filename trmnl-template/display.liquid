@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://usetrmnl.com/css/latest/plugins.css">
+  <script src="https://usetrmnl.com/js/latest/plugins.js"></script>
+  <style>
+    .weather-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 20px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .main-weather {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .weather-icon {
+      font-size: 180px;
+      line-height: 1;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .current-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 20px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .today, .tomorrow {
+      text-align: center;
+      padding: 20px;
+      border: 2px solid #000;
+      border-radius: 8px;
+    }
+
+    .temp-large {
+      font-size: 72px;
+      font-weight: bold;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .condition {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .temp-range {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .uv-index {
+      font-size: 18px;
+    }
+
+    .label {
+      font-size: 20px;
+      font-weight: bold;
+      background: #000;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .title_bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border-top: 2px solid #000;
+      margin-top: auto;
+    }
+
+    .title_bar .title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .title_bar .time {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body class="environment trmnl">
+  <div class="screen">
+    <div class="view view--full">
+      <div class="weather-container">
+        <div class="main-weather">
+          <div class="weather-icon">{{ current_icon }}</div>
+
+          <div class="current-section">
+            <!-- Today's Weather -->
+            <div class="today">
+              <div class="temp-large">{{ current_temp }}°</div>
+              <div class="condition">{{ current_condition }}</div>
+              <div class="temp-range">{{ temp_low }}° - {{ temp_high }}°</div>
+              <div class="uv-index">UV {{ uv_index }}</div>
+            </div>
+
+            <!-- Tomorrow's Weather -->
+            <div class="tomorrow">
+              <div class="label">Tomorrow</div>
+              <div class="condition">{{ tomorrow_condition }}</div>
+              <div class="temp-range">[L/H] {{ tomorrow_temp_low }}° - {{ tomorrow_temp_high }}°</div>
+              <div class="uv-index">[UV] {{ tomorrow_uv_index }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="title_bar">
+          <span class="title">🌦 Weather</span>
+          <span class="time">{{ location_name }} ({{ current_time }})</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

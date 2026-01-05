@@ -1,0 +1,5 @@
+# Update weather every 15 minutes
+# TRMNL free tier allows 12 updates/hour, so this is safe
+*/15 * * * * cd /app && /usr/local/bin/python app.py update >> /var/log/cron.log 2>&1
+
+# Empty line required at end of crontab
