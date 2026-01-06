@@ -24,6 +24,7 @@ docker-solution/logs/
 # Wrangler
 .wrangler/
 worker-configuration.d.ts
+cloudflare-worker/wrangler.toml
 
 # IDE
 .vscode/
