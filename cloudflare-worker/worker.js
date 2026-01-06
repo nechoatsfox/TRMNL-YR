@@ -162,7 +162,8 @@ async function sendToTRMNL(webhookUrl, weatherData) {
   });
 
   if (!response.ok) {
-    throw new Error(`TRMNL webhook error: ${response.status} ${response.statusText}`);
+    const errorBody = await response.text();
+    throw new Error(`TRMNL webhook error: ${response.status} ${response.statusText} - ${errorBody}`);
   }
 
   return await response.text();
