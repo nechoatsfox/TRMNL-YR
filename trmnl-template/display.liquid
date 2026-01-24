@@ -3,128 +3,123 @@
 <head>
   <link rel="stylesheet" href="https://usetrmnl.com/css/latest/plugins.css">
   <script src="https://usetrmnl.com/js/latest/plugins.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    .weather-container {
+    .layout {
       display: flex;
       flex-direction: column;
-      height: 100%;
-      padding: 20px;
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-    }
-
-    .main-weather {
-      flex: 1;
-      display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
+      padding: 30px 20px 20px 20px;
+      font-family: 'Inter', Arial, sans-serif;
     }
 
     .weather-icon {
-      font-size: 180px;
-      line-height: 1;
+      font-size: 200px;
+      line-height: 0.8;
       margin-bottom: 20px;
-      text-align: center;
     }
 
-    .current-section {
+    .current-temp {
+      font-size: 100px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 30px;
+    }
+
+    .columns {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      margin-top: 20px;
+      gap: 60px;
       width: 100%;
-      max-width: 600px;
+      max-width: 650px;
     }
 
-    .today, .tomorrow {
-      text-align: center;
-      padding: 20px;
-      border: 2px solid #000;
-      border-radius: 8px;
+    .column {
+      text-align: left;
     }
 
-    .temp-large {
-      font-size: 72px;
-      font-weight: bold;
-      line-height: 1;
-      margin-bottom: 10px;
-    }
-
-    .condition {
+    .condition-text {
       font-size: 24px;
       font-weight: 600;
       margin-bottom: 8px;
+      line-height: 1.2;
     }
 
-    .temp-range {
+    .temp-text {
       font-size: 20px;
-      margin-bottom: 8px;
+      font-weight: 400;
+      margin-bottom: 6px;
     }
 
-    .uv-index {
+    .uv-text {
       font-size: 18px;
+      font-weight: 400;
     }
 
-    .label {
-      font-size: 20px;
-      font-weight: bold;
+    .tomorrow-badge {
       background: #000;
       color: #fff;
-      padding: 6px 12px;
-      border-radius: 4px;
+      padding: 5px 12px;
+      font-size: 18px;
+      font-weight: 700;
       display: inline-block;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .title_bar {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 12px 20px;
-      border-top: 2px solid #000;
-      margin-top: auto;
-    }
-
-    .title_bar .title {
-      font-size: 20px;
-      font-weight: bold;
+      align-items: center;
+      width: 100%;
+      padding: 0 20px 20px 20px;
     }
 
     .title_bar .time {
-      font-size: 18px;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .title_bar .location {
+      font-size: 22px;
+      font-weight: 600;
     }
   </style>
 </head>
 <body class="environment trmnl">
   <div class="screen">
     <div class="view view--full">
-      <div class="weather-container">
-        <div class="main-weather">
-          <div class="weather-icon">{{ current_icon }}</div>
+      <div class="layout">
+        <!-- Weather Icon -->
+        <div class="weather-icon">{{ current_icon }}</div>
 
-          <div class="current-section">
-            <!-- Today's Weather -->
-            <div class="today">
-              <div class="temp-large">{{ current_temp }}°</div>
-              <div class="condition">{{ current_condition }}</div>
-              <div class="temp-range">{{ temp_low }}° - {{ temp_high }}°</div>
-              <div class="uv-index">UV {{ uv_index }}</div>
-            </div>
+        <!-- Current Temperature -->
+        <div class="current-temp">{{ current_temp }}°</div>
 
-            <!-- Tomorrow's Weather -->
-            <div class="tomorrow">
-              <div class="label">Tomorrow</div>
-              <div class="condition">{{ tomorrow_condition }}</div>
-              <div class="temp-range">[L/H] {{ tomorrow_temp_low }}° - {{ tomorrow_temp_high }}°</div>
-              <div class="uv-index">[UV] {{ tomorrow_uv_index }}</div>
-            </div>
+        <!-- Two Column Layout -->
+        <div class="columns">
+          <!-- Today -->
+          <div class="column">
+            <div class="condition-text">{{ current_condition }}</div>
+            <div class="temp-text">L/H {{ temp_low }}° - {{ temp_high }}°</div>
+            <div class="uv-text">UV Lav ({{ uv_index }})</div>
+          </div>
+
+          <!-- Tomorrow -->
+          <div class="column">
+            <div class="tomorrow-badge">I morgen</div>
+            <div class="condition-text">{{ tomorrow_condition }}</div>
+            <div class="temp-text">L/H {{ tomorrow_temp_low }}° - {{ tomorrow_temp_high }}°</div>
+            <div class="uv-text">UV Lav ({{ tomorrow_uv_index }})</div>
           </div>
         </div>
+      </div>
 
-        <div class="title_bar">
-          <span class="title">🌦 Weather</span>
-          <span class="time">{{ location_name }} ({{ current_time }})</span>
-        </div>
+      <!-- Footer -->
+      <div class="title_bar">
+        <span class="time">{{ current_time }}</span>
+        <span class="location">{{ location_name }}</span>
       </div>
     </div>
   </div>

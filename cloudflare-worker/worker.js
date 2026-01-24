@@ -10,6 +10,9 @@
  * - LOCATION_LON: Longitude (max 4 decimals)
  * - LOCATION_NAME: Display name for location
  * - CONTACT_EMAIL: Your email for YR API User-Agent
+ * 
+ * Environment Variables Optional:
+ * - LANGUAGE: "no" for Norwegian (default) or "en" for English
  */
 
 // Weather code to icon mapping (YR.no uses MET Norway symbolcodes)
@@ -37,12 +40,34 @@ function getWeatherIcon(symbolCode) {
   return WEATHER_ICONS[baseCode] || WEATHER_ICONS.default;
 }
 
-// Get weather description from symbol code
-function getWeatherDescription(symbolCode) {
-  if (!symbolCode) return 'Unknown';
-
-  const baseCode = symbolCode.split('_')[0];
-  const descriptions = {
+// Weather descriptions in Norwegian and English
+const WEATHER_DESCRIPTIONS = {
+  no: {
+    'clearsky': 'Klarvær',
+    'fair': 'Lettskyet',
+    'partlycloudy': 'Delvis skyet',
+    'cloudy': 'Overskyet',
+    'rainshowers': 'Regnbyger',
+    'rain': 'Regn',
+    'lightrain': 'Lett regn',
+    'heavyrain': 'Kraftig regn',
+    'sleet': 'Sludd',
+    'snow': 'Snø',
+    'fog': 'Tåke',
+    'lightrainshowers': 'Lette regnbyger',
+    'heavyrainshowers': 'Kraftige regnbyger',
+    'lightrainshowersandthunder': 'Lett regn og torden',
+    'rainshowersandthunder': 'Regnbyger og torden',
+    'heavyrainshowersandthunder': 'Kraftig regn og torden',
+    'snowshowers': 'Snøbyger',
+    'lightsnowshowers': 'Lette snøbyger',
+    'heavysnowshowers': 'Kraftige snøbyger',
+    'sleetshowers': 'Sluddbyger',
+    'lightsleetshowers': 'Lette sluddbyger',
+    'heavysleetshowers': 'Kraftige sluddbyger',
+    'unknown': 'Ukjent'
+  },
+  en: {
     'clearsky': 'Clear',
     'fair': 'Fair',
     'partlycloudy': 'Partly Cloudy',
@@ -58,14 +83,31 @@ function getWeatherDescription(symbolCode) {
     'heavyrainshowers': 'Heavy Rain',
     'lightrainshowersandthunder': 'Thunderstorm',
     'rainshowersandthunder': 'Thunderstorm',
-    'heavyrainshowersandthunder': 'Heavy Thunderstorm'
-  };
+    'heavyrainshowersandthunder': 'Heavy Thunderstorm',
+    'snowshowers': 'Snow Showers',
+    'lightsnowshowers': 'Light Snow',
+    'heavysnowshowers': 'Heavy Snow',
+    'sleetshowers': 'Sleet Showers',
+    'lightsleetshowers': 'Light Sleet',
+    'heavysleetshowers': 'Heavy Sleet',
+    'unknown': 'Unknown'
+  }
+};
 
-  return descriptions[baseCode] || baseCode.replace(/([A-Z])/g, ' $1').trim();
+// Get weather description from symbol code
+function getWeatherDescription(symbolCode, language = 'no') {
+  if (!symbolCode) {
+    return WEATHER_DESCRIPTIONS[language]?.unknown || 'Unknown';
+  }
+
+  const baseCode = symbolCode.split('_')[0];
+  const langDescriptions = WEATHER_DESCRIPTIONS[language] || WEATHER_DESCRIPTIONS.no;
+  
+  return langDescriptions[baseCode] || baseCode;
 }
 
 // Format weather data for TRMNL
-function formatWeatherData(weatherData, locationName) {
+function formatWeatherData(weatherData, locationName, language = 'no') {
   const timeseries = weatherData.properties.timeseries;
 
   // Current weather (first entry)
@@ -75,13 +117,18 @@ function formatWeatherData(weatherData, locationName) {
   const next6h = current.data.next_6_hours || current.data.next_12_hours;
 
   // Find tomorrow's weather (approximately 24 hours from now)
-  const tomorrowIndex = timeseries.findIndex((entry, index) => {
+  let tomorrowIndex = timeseries.findIndex((entry, index) => {
     if (index === 0) return false;
     const hours = (new Date(entry.time) - new Date(current.time)) / (1000 * 60 * 60);
     return hours >= 20 && hours <= 28;
   });
 
-  const tomorrow = tomorrowIndex > 0 ? timeseries[tomorrowIndex] : timeseries[Math.min(8, timeseries.length - 1)];
+  // Use fallback if not found (findIndex returns -1 if not found)
+  if (tomorrowIndex < 0) {
+    tomorrowIndex = Math.min(8, timeseries.length - 1);
+  }
+
+  const tomorrow = timeseries[tomorrowIndex];
   const tomorrowData = tomorrow.data.instant.details;
   const tomorrowNext6h = tomorrow.data.next_6_hours || tomorrow.data.next_12_hours;
 
@@ -90,7 +137,7 @@ function formatWeatherData(weatherData, locationName) {
   const todayMin = Math.min(...todayTemps);
   const todayMax = Math.max(...todayTemps);
 
-  // Get temperature range for tomorrow
+  // Get temperature range for tomorrow (using the correct index)
   const tomorrowTemps = timeseries.slice(tomorrowIndex, tomorrowIndex + 24).map(t => t.data.instant.details.air_temperature);
   const tomorrowMin = Math.min(...tomorrowTemps);
   const tomorrowMax = Math.max(...tomorrowTemps);
@@ -106,15 +153,14 @@ function formatWeatherData(weatherData, locationName) {
   return {
     // Current conditions
     current_temp: Math.round(currentData.air_temperature),
-    current_condition: getWeatherDescription(next1h?.summary?.symbol_code || next6h?.summary?.symbol_code),
+    current_condition: getWeatherDescription(next1h?.summary?.symbol_code || next6h?.summary?.symbol_code, language),
     current_icon: getWeatherIcon(next1h?.summary?.symbol_code || next6h?.summary?.symbol_code),
     temp_low: Math.round(todayMin),
     temp_high: Math.round(todayMax),
     uv_index: Math.round(currentData.ultraviolet_index_clear_sky || 0),
 
-    // Tomorrow's forecast
-    tomorrow_condition: getWeatherDescription(tomorrowNext6h?.summary?.symbol_code),
-    tomorrow_icon: getWeatherIcon(tomorrowNext6h?.summary?.symbol_code),
+    // Tomorrow's forecast (without icon)
+    tomorrow_condition: getWeatherDescription(tomorrowNext6h?.summary?.symbol_code, language),
     tomorrow_temp_low: Math.round(tomorrowMin),
     tomorrow_temp_high: Math.round(tomorrowMax),
     tomorrow_uv_index: Math.round(tomorrowData.ultraviolet_index_clear_sky || 0),
@@ -153,6 +199,8 @@ async function sendToTRMNL(webhookUrl, weatherData) {
     merge_variables: weatherData
   };
 
+  console.log('Sending payload to TRMNL:', JSON.stringify(payload, null, 2));
+
   const response = await fetch(webhookUrl, {
     method: 'POST',
     headers: {
@@ -161,12 +209,14 @@ async function sendToTRMNL(webhookUrl, weatherData) {
     body: JSON.stringify(payload)
   });
 
+  const responseText = await response.text();
+  console.log('TRMNL response:', response.status, responseText);
+
   if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(`TRMNL webhook error: ${response.status} ${response.statusText} - ${errorBody}`);
+    throw new Error(`TRMNL webhook error: ${response.status} ${response.statusText} - ${responseText}`);
   }
 
-  return await response.text();
+  return responseText;
 }
 
 // Main handler
@@ -193,13 +243,14 @@ export default {
       // Round coordinates to 4 decimals (YR requirement)
       const lat = parseFloat(env.LOCATION_LAT).toFixed(4);
       const lon = parseFloat(env.LOCATION_LON).toFixed(4);
+      const language = (env.LANGUAGE || 'no').toLowerCase();
 
       // Fetch weather from YR
       console.log(`Fetching weather for ${lat}, ${lon}`);
       const weatherData = await fetchYRWeather(lat, lon, env.CONTACT_EMAIL);
 
       // Format for TRMNL
-      const formattedData = formatWeatherData(weatherData, env.LOCATION_NAME);
+      const formattedData = formatWeatherData(weatherData, env.LOCATION_NAME, language);
 
       // Send to TRMNL
       console.log('Sending to TRMNL:', formattedData);
@@ -237,9 +288,10 @@ export default {
     try {
       const lat = parseFloat(env.LOCATION_LAT).toFixed(4);
       const lon = parseFloat(env.LOCATION_LON).toFixed(4);
+      const language = (env.LANGUAGE || 'no').toLowerCase();
 
       const weatherData = await fetchYRWeather(lat, lon, env.CONTACT_EMAIL);
-      const formattedData = formatWeatherData(weatherData, env.LOCATION_NAME);
+      const formattedData = formatWeatherData(weatherData, env.LOCATION_NAME, language);
       await sendToTRMNL(env.TRMNL_WEBHOOK_URL, formattedData);
 
       console.log('Scheduled update successful:', formattedData);

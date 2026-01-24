@@ -1,0 +1,25 @@
+<div style="text-align: center; padding: 20px; font-family: Arial, sans-serif;">
+  <div style="font-size: 140px; line-height: 1;">{{ current_icon }}</div>
+  <div style="font-size: 100px; font-weight: bold; line-height: 1; margin: 15px 0;">{{ current_temp }}°</div>
+  <div style="font-size: 28px; font-weight: 600; margin-bottom: 30px;">{{ current_condition }}</div>
+
+  <div style="display: flex; justify-content: center; gap: 60px; max-width: 700px; margin: 0 auto 20px;">
+    <div style="text-align: left;">
+      <div style="font-size: 20px; font-weight: 600; margin-bottom: 6px;">I dag</div>
+      <div style="font-size: 18px;">Høy/Lav: {{ temp_high }}° / {{ temp_low }}°</div>
+      <div style="font-size: 16px;">UV: {{ uv_index }}</div>
+    </div>
+
+    <div style="text-align: left;">
+      <div style="font-size: 20px; font-weight: 600; margin-bottom: 6px;">I morgen</div>
+      <div style="font-size: 18px;">{{ tomorrow_condition }}</div>
+      <div style="font-size: 18px;">Høy/Lav: {{ tomorrow_temp_high }}° / {{ tomorrow_temp_low }}°</div>
+      <div style="font-size: 16px;">UV: {{ tomorrow_uv_index }}</div>
+    </div>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; margin-top: 30px; font-size: 20px; font-weight: 600;">
+    <span>{{ current_time }}</span>
+    <span>{{ location_name }}</span>
+  </div>
+</div>

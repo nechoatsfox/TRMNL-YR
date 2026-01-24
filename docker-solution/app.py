@@ -28,6 +28,7 @@ LOCATION_LAT = os.getenv('LOCATION_LAT')
 LOCATION_LON = os.getenv('LOCATION_LON')
 LOCATION_NAME = os.getenv('LOCATION_NAME', 'Unknown')
 CONTACT_EMAIL = os.getenv('CONTACT_EMAIL')
+LANGUAGE = os.getenv('LANGUAGE', 'no').lower()  # 'no' for Norwegian, 'en' for English
 
 # Weather icon mapping
 WEATHER_ICONS = {
@@ -45,22 +46,56 @@ WEATHER_ICONS = {
 }
 
 WEATHER_DESCRIPTIONS = {
-    'clearsky': 'Clear',
-    'fair': 'Fair',
-    'partlycloudy': 'Partly Cloudy',
-    'cloudy': 'Cloudy',
-    'rainshowers': 'Rain Showers',
-    'rain': 'Rain',
-    'lightrain': 'Light Rain',
-    'heavyrain': 'Heavy Rain',
-    'sleet': 'Sleet',
-    'snow': 'Snow',
-    'fog': 'Fog',
-    'lightrainshowers': 'Light Rain',
-    'heavyrainshowers': 'Heavy Rain',
-    'lightrainshowersandthunder': 'Thunderstorm',
-    'rainshowersandthunder': 'Thunderstorm',
-    'heavyrainshowersandthunder': 'Heavy Thunderstorm',
+    'no': {
+        'clearsky': 'Klarvær',
+        'fair': 'Lettskyet',
+        'partlycloudy': 'Delvis skyet',
+        'cloudy': 'Overskyet',
+        'rainshowers': 'Regnbyger',
+        'rain': 'Regn',
+        'lightrain': 'Lett regn',
+        'heavyrain': 'Kraftig regn',
+        'sleet': 'Sludd',
+        'snow': 'Snø',
+        'fog': 'Tåke',
+        'lightrainshowers': 'Lette regnbyger',
+        'heavyrainshowers': 'Kraftige regnbyger',
+        'lightrainshowersandthunder': 'Lett regn og torden',
+        'rainshowersandthunder': 'Regnbyger og torden',
+        'heavyrainshowersandthunder': 'Kraftig regn og torden',
+        'snowshowers': 'Snøbyger',
+        'lightsnowshowers': 'Lette snøbyger',
+        'heavysnowshowers': 'Kraftige snøbyger',
+        'sleetshowers': 'Sluddbyger',
+        'lightsleetshowers': 'Lette sluddbyger',
+        'heavysleetshowers': 'Kraftige sluddbyger',
+        'unknown': 'Ukjent'
+    },
+    'en': {
+        'clearsky': 'Clear',
+        'fair': 'Fair',
+        'partlycloudy': 'Partly Cloudy',
+        'cloudy': 'Cloudy',
+        'rainshowers': 'Rain Showers',
+        'rain': 'Rain',
+        'lightrain': 'Light Rain',
+        'heavyrain': 'Heavy Rain',
+        'sleet': 'Sleet',
+        'snow': 'Snow',
+        'fog': 'Fog',
+        'lightrainshowers': 'Light Rain',
+        'heavyrainshowers': 'Heavy Rain',
+        'lightrainshowersandthunder': 'Thunderstorm',
+        'rainshowersandthunder': 'Thunderstorm',
+        'heavyrainshowersandthunder': 'Heavy Thunderstorm',
+        'snowshowers': 'Snow Showers',
+        'lightsnowshowers': 'Light Snow',
+        'heavysnowshowers': 'Heavy Snow',
+        'sleetshowers': 'Sleet Showers',
+        'lightsleetshowers': 'Light Sleet',
+        'heavysleetshowers': 'Heavy Sleet',
+        'unknown': 'Unknown'
+    }
 }
 
 
@@ -72,12 +107,15 @@ def get_weather_icon(symbol_code: Optional[str]) -> str:
     return WEATHER_ICONS.get(base_code, '🌡️')
 
 
-def get_weather_description(symbol_code: Optional[str]) -> str:
+def get_weather_description(symbol_code: Optional[str], language: str = 'no') -> str:
     """Get weather description from YR symbol code."""
     if not symbol_code:
-        return 'Unknown'
+        lang_descriptions = WEATHER_DESCRIPTIONS.get(language, WEATHER_DESCRIPTIONS['no'])
+        return lang_descriptions.get('unknown', 'Unknown')
+    
     base_code = symbol_code.split('_')[0]
-    return WEATHER_DESCRIPTIONS.get(base_code, base_code.title())
+    lang_descriptions = WEATHER_DESCRIPTIONS.get(language, WEATHER_DESCRIPTIONS['no'])
+    return lang_descriptions.get(base_code, base_code.title())
 
 
 def fetch_yr_weather(lat: str, lon: str, contact_email: str) -> Dict[str, Any]:
@@ -99,7 +137,7 @@ def fetch_yr_weather(lat: str, lon: str, contact_email: str) -> Dict[str, Any]:
     return response.json()
 
 
-def format_weather_data(weather_data: Dict[str, Any], location_name: str) -> Dict[str, Any]:
+def format_weather_data(weather_data: Dict[str, Any], location_name: str, language: str = 'no') -> Dict[str, Any]:
     """Format YR weather data for TRMNL."""
     timeseries = weather_data['properties']['timeseries']
 
@@ -149,14 +187,14 @@ def format_weather_data(weather_data: Dict[str, Any], location_name: str) -> Dic
     return {
         # Current conditions
         'current_temp': round(current_data['air_temperature']),
-        'current_condition': get_weather_description(current_symbol),
+        'current_condition': get_weather_description(current_symbol, language),
         'current_icon': get_weather_icon(current_symbol),
         'temp_low': round(today_min),
         'temp_high': round(today_max),
         'uv_index': round(current_data.get('ultraviolet_index_clear_sky', 0)),
 
         # Tomorrow's forecast
-        'tomorrow_condition': get_weather_description(tomorrow_symbol),
+        'tomorrow_condition': get_weather_description(tomorrow_symbol, language),
         'tomorrow_icon': get_weather_icon(tomorrow_symbol),
         'tomorrow_temp_low': round(tomorrow_min),
         'tomorrow_temp_high': round(tomorrow_max),
@@ -209,7 +247,7 @@ def update_weather() -> Dict[str, Any]:
         weather_data = fetch_yr_weather(LOCATION_LAT, LOCATION_LON, CONTACT_EMAIL)
 
         # Format for TRMNL
-        formatted_data = format_weather_data(weather_data, LOCATION_NAME)
+        formatted_data = format_weather_data(weather_data, LOCATION_NAME, LANGUAGE)
 
         # Send to TRMNL
         send_to_trmnl(TRMNL_WEBHOOK_URL, formatted_data)

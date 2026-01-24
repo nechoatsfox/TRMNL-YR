@@ -12,6 +12,7 @@ services:
       - LOCATION_LON=${LOCATION_LON}
       - LOCATION_NAME=${LOCATION_NAME:-Unknown}
       - CONTACT_EMAIL=${CONTACT_EMAIL}
+      - LANGUAGE=${LANGUAGE:-no}
       - PORT=8080
     ports:
       - "8080:8080"

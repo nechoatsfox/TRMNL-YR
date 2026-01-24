@@ -51,6 +51,7 @@ LOCATION_LAT = "59.9139"
 LOCATION_LON = "10.7522"
 LOCATION_NAME = "Oslo"
 CONTACT_EMAIL = "your-email@example.com"
+LANGUAGE = "no"  # Optional: "no" for Norwegian or "en" for English
 
 # Deploy!
 wrangler deploy
@@ -99,6 +100,7 @@ LOCATION_LAT=59.9139
 LOCATION_LON=10.7522
 LOCATION_NAME=Oslo
 CONTACT_EMAIL=your@email.com
+LANGUAGE=no  # Optional: "no" for Norwegian or "en" for English
 ```
 
 ### 3. Run
@@ -148,6 +150,7 @@ Done!
 ## Next Steps
 
 - Customize the display template (`trmnl-template/display.liquid`)
+- Change language: Set `LANGUAGE=en` for English or `LANGUAGE=no` for Norwegian
 - Change update frequency in cron settings
 - Add more weather data fields
 - See full README.md for advanced options

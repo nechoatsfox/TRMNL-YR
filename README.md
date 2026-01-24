@@ -90,6 +90,7 @@ LOCATION_LAT = "59.9139"
 LOCATION_LON = "10.7522"
 LOCATION_NAME = "Oslo"
 CONTACT_EMAIL = "your-email@example.com"
+LANGUAGE = "no"  # Optional: "no" for Norwegian (default) or "en" for English
 ```
 
 **To get your TRMNL Webhook URL:**
@@ -146,6 +147,7 @@ LOCATION_LAT=59.9139
 LOCATION_LON=10.7522
 LOCATION_NAME=Oslo
 CONTACT_EMAIL=your-email@example.com
+LANGUAGE=no  # Optional: "no" for Norwegian (default) or "en" for English
 ```
 
 ### Step 2: Build and Run
@@ -203,7 +205,7 @@ docker exec trmnl-yr-weather python app.py update
 
 - **Plugin Name**: YR Weather
 - **Strategy**: `deep_merge` (combines updates)
-- **Markup**: Copy the contents of `trmnl-template/display.liquid`
+- **Markup**: Leave empty (uses TRMNL's default auto-layout)
 
 ### Step 3: Add to Your Playlist
 
@@ -219,21 +221,27 @@ Copy the webhook URL from your plugin settings and use it in your deployment con
 
 ## Customization
 
-### Modifying the Display Template
+### Language Support
 
-Edit `trmnl-template/display.liquid` to customize the layout:
+The plugin supports both Norwegian and English weather descriptions:
 
-- Change fonts, sizes, colors in the `<style>` section
-- Rearrange layout elements
-- Add additional weather data fields
+- **Norwegian (default)**: Set `LANGUAGE=no` or omit the variable
+  - Example: "Klarvær", "Regnbyger", "Delvis skyet"
+- **English**: Set `LANGUAGE=en`
+  - Example: "Clear", "Rain Showers", "Partly Cloudy"
 
-Available variables from the webhook:
+The language setting affects weather condition descriptions only. All other data (temperatures, UV index, etc.) remains numeric.
+
+### Available Data Variables
+
+TRMNL's auto-layout displays all available variables automatically. The following data is sent from the webhook:
 - `current_temp` - Current temperature
 - `current_condition` - Weather description
 - `current_icon` - Weather emoji
 - `temp_low` / `temp_high` - Today's temperature range
 - `uv_index` - UV index
 - `tomorrow_condition` - Tomorrow's weather
+- `tomorrow_icon` - Tomorrow's weather emoji (Docker only)
 - `tomorrow_temp_low` / `tomorrow_temp_high` - Tomorrow's temps
 - `tomorrow_uv_index` - Tomorrow's UV index
 - `location_name` - Location name

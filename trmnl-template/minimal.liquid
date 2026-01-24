@@ -1,0 +1,26 @@
+<div class="layout">
+  <div class="content content--center">
+    <span style="font-size: 120px; line-height: 1;">{{ current_icon }}</span>
+    <span class="value" style="font-size: 80px; font-weight: bold;">{{ current_temp }}°</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px; max-width: 600px; margin: 0 auto;">
+    <div>
+      <span class="label" style="font-size: 20px; font-weight: 600;">{{ current_condition }}</span><br>
+      <span class="label" style="font-size: 18px;">L/H {{ temp_low }}° - {{ temp_high }}°</span><br>
+      <span class="label" style="font-size: 16px;">UV Lav ({{ uv_index }})</span>
+    </div>
+
+    <div>
+      <span class="label" style="background: #000; color: #fff; padding: 4px 10px; font-size: 16px; font-weight: bold;">I morgen</span><br>
+      <span class="label" style="font-size: 20px; font-weight: 600;">{{ tomorrow_condition }}</span><br>
+      <span class="label" style="font-size: 18px;">L/H {{ tomorrow_temp_low }}° - {{ tomorrow_temp_high }}°</span><br>
+      <span class="label" style="font-size: 16px;">UV Lav ({{ tomorrow_uv_index }})</span>
+    </div>
+  </div>
+</div>
+
+<div class="title_bar">
+  <span class="title">{{ current_time }}</span>
+  <span class="instance">{{ location_name }}</span>
+</div>

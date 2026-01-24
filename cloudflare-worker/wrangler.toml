@@ -6,13 +6,15 @@ compatibility_date = "2024-01-01"
 [triggers]
 crons = ["*/15 * * * *"]
 
-# Environment variables - REPLACE THESE WITH YOUR ACTUAL VALUES
+# Environment variables (set these using: wrangler secret put <NAME>)
+# Or configure them in the Cloudflare dashboard
 [vars]
-TRMNL_WEBHOOK_URL = "https://usetrmnl.com/api/custom_plugins/YOUR-UUID-HERE"
-LOCATION_LAT = "59.9139"
-LOCATION_LON = "10.7522"
-LOCATION_NAME = "Oslo"
-CONTACT_EMAIL = "your-email@example.com"
+ TRMNL_WEBHOOK_URL = "https://usetrmnl.com/api/custom_plugins/YOUR-UUID-HERE"
+ LOCATION_LAT = "59.9139"
+ LOCATION_LON = "10.7522"
+ LOCATION_NAME = "Oslo"
+ CONTACT_EMAIL = "your-email@example.com"
+ LANGUAGE = "no"  # Use "no" for Norwegian or "en" for English
 
 # Example locations:
 # Oslo, Norway: 59.9139, 10.7522
