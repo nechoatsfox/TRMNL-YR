@@ -6,18 +6,28 @@ compatibility_date = "2024-01-01"
 [triggers]
 crons = ["*/15 * * * *"]
 
-# Environment variables (set these using: wrangler secret put <NAME>)
-# Or configure them in the Cloudflare dashboard
+# ============================================================
+# CONFIGURATION — edit these values before deploying
+# ============================================================
 [vars]
- TRMNL_WEBHOOK_URL = "https://usetrmnl.com/api/custom_plugins/YOUR-UUID-HERE"
- LOCATION_LAT = "59.9139"
- LOCATION_LON = "10.7522"
- LOCATION_NAME = "Oslo"
- CONTACT_EMAIL = "your-email@example.com"
- LANGUAGE = "no"  # Use "no" for Norwegian or "en" for English
+
+# Your TRMNL plugin webhook URL (from usetrmnl.com → Plugins → Private Plugins)
+TRMNL_WEBHOOK_URL = "https://usetrmnl.com/api/custom_plugins/YOUR-UUID-HERE"
+
+# --- Your Location ---
+# Find coordinates at https://www.latlong.net/ (max 4 decimal places)
+LOCATION_LAT = "59.9139"   # Latitude  (e.g. 59.9139 for Oslo)
+LOCATION_LON = "10.7522"   # Longitude (e.g. 10.7522 for Oslo)
+LOCATION_NAME = "Oslo"     # Display name shown on the TRMNL screen
+
+# Your email — required by YR.no API terms of service
+CONTACT_EMAIL = "your-email@example.com"
+
+# Language: "no" for Norwegian, "en" for English
+LANGUAGE = "no"
 
 # Example locations:
-# Oslo, Norway: 59.9139, 10.7522
-# Bergen, Norway: 60.3913, 5.3221
-# London, UK: 51.5074, -0.1278
-# New York, USA: 40.7128, -74.0060
+# Oslo, Norway:   LOCATION_LAT = "59.9139"  LOCATION_LON = "10.7522"
+# Bergen, Norway: LOCATION_LAT = "60.3913"  LOCATION_LON = "5.3221"
+# London, UK:     LOCATION_LAT = "51.5074"  LOCATION_LON = "-0.1278"
+# New York, USA:  LOCATION_LAT = "40.7128"  LOCATION_LON = "-74.0060"
