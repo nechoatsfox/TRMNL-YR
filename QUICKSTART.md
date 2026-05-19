@@ -77,6 +77,26 @@ curl https://trmnl-yr-weather.YOUR-SUBDOMAIN.workers.dev
 
 Done! Your TRMNL will now show weather updates every 15 minutes.
 
+### Updating Your Location
+
+Already deployed and want to change the city? Three steps:
+
+1. Open `cloudflare-worker/wrangler.toml`
+2. Change the three location values:
+   ```toml
+   LOCATION_LAT = "60.3913"   # ← new latitude
+   LOCATION_LON = "5.3221"    # ← new longitude
+   LOCATION_NAME = "Bergen"   # ← new display name
+   ```
+   Find coordinates at https://www.latlong.net/
+3. Redeploy (takes ~5 seconds):
+   ```bash
+   cd cloudflare-worker
+   npm run deploy
+   ```
+
+The next scheduled run will use the new location.
+
 ---
 
 ## Alternative: Docker Setup
