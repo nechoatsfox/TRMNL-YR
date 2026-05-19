@@ -41,3 +41,9 @@ logs/
 # Temporary files
 *.tmp
 *.temp
+
+# Claude Code
+.claude/
+
+# Superpowers brainstorm sessions
+.superpowers/
