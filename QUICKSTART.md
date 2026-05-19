@@ -92,7 +92,7 @@ Already deployed and want to change the city? Three steps:
 3. Redeploy (takes ~5 seconds):
    ```bash
    cd cloudflare-worker
-   npm run deploy
+   wrangler deploy
    ```
 
 The next scheduled run will use the new location.
