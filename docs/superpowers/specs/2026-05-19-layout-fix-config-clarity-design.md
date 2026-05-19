@@ -31,8 +31,20 @@ No structural changes — same two-column layout and footer.
 - Add a tip comment pointing to latlong.net to find coordinates
 - No functional changes — just documentation
 
+### 3. Updating a running worker (`cloudflare-worker/package.json` + `QUICKSTART.md`)
+
+Mechanism: edit `wrangler.toml` + run `wrangler deploy` (~5s redeploy).
+
+- Add an `npm run deploy` script to `package.json` as a shortcut for `wrangler deploy`
+- Add an "Updating your location" section to `QUICKSTART.md` with exact steps:
+  1. Open `wrangler.toml`
+  2. Change `LOCATION_LAT`, `LOCATION_LON`, `LOCATION_NAME`
+  3. Run `npm run deploy` (or `wrangler deploy`)
+
 ## Files Changed
 
 - `trmnl-template/display.liquid` — CSS value tweaks only
 - `cloudflare-worker/wrangler.toml` — comment improvements only
 - `cloudflare-worker/wrangler.example.toml` — same comment improvements
+- `cloudflare-worker/package.json` — add `deploy` script
+- `QUICKSTART.md` — add "Updating your location" section
